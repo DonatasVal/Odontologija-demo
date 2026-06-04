@@ -82,6 +82,9 @@ export default function Odontologija1() {
   const [selectedTime, setSelectedTime] = useState("09:00");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [message, setMessage] = useState("");
+  const [xrayFile, setXrayFile] = useState("");
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
 
   const availableDoctors = useMemo(() => selectedService.doctors, [selectedService]);
@@ -116,7 +119,7 @@ export default function Odontologija1() {
 
   function submit(e) {
     e.preventDefault();
-    if (!name || !phone || !selectedDate || !selectedTime) return;
+    if (!name || !phone || !selectedDate || !selectedTime || !privacyAccepted) return;
     setConfirmed(true);
   }
 
@@ -136,6 +139,7 @@ export default function Odontologija1() {
     .btn { border: 0; border-radius: 999px; padding: 13px 22px; font-weight: 900; cursor: pointer; background: #0369a1; color: white; box-shadow: 0 16px 35px rgba(3,105,161,.18); text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
     .btn.secondary { background: white; color: #0369a1; border: 1px solid #bae6fd; box-shadow: none; }
     .btn.soft { background: #f1f5f9; color: #0f172a; box-shadow: none; border: 1px solid #e2e8f0; }
+    .btn:disabled { opacity: .55; cursor: not-allowed; }
     .hero { padding: 94px 0 72px; background: radial-gradient(circle at 78% 10%, #bae6fd 0, transparent 32%), linear-gradient(180deg,#eff6ff 0,#fff 90%); overflow: hidden; }
     .hero-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 44px; align-items: center; }
     .eyebrow { display: inline-flex; align-items:center; gap:8px; background:#e0f2fe; color:#075985; padding: 8px 14px; border-radius:999px; font-weight:900; font-size:13px; }
@@ -180,13 +184,23 @@ export default function Odontologija1() {
     .time { border:1px solid #bae6fd; background:white; color:#0369a1; border-radius:999px; padding:10px 15px; cursor:pointer; font-weight:900; }
     .time.selected { background:#0369a1; color:white; }
     .form { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:18px; }
-    .input { width:100%; padding:14px 16px; border-radius:16px; border:1px solid #cbd5e1; font-size:15px; }
+    .input, .textarea { width:100%; padding:14px 16px; border-radius:16px; border:1px solid #cbd5e1; font-size:15px; font-family: inherit; }
+    .textarea { grid-column: 1 / -1; min-height: 122px; resize: vertical; line-height: 1.55; }
+    .upload { grid-column: 1 / -1; border: 1px dashed #93c5fd; background: #f8fafc; border-radius: 18px; padding: 16px; }
+    .upload-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+    .upload input { display: none; }
+    .upload-label { display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; background: #0369a1; color: white; padding: 11px 16px; font-weight: 900; cursor: pointer; }
+    .consent { grid-column: 1 / -1; display: flex; gap: 12px; align-items: flex-start; padding: 14px; border-radius: 18px; background: #f8fafc; border: 1px solid #e2e8f0; color: #334155; line-height: 1.55; }
+    .consent input { width: 20px; height: 20px; margin-top: 3px; accent-color: #0369a1; flex: 0 0 auto; }
+    .consent a { color: #0369a1; font-weight: 900; text-decoration: none; }
+    .data-note { grid-column: 1 / -1; color: #64748b; font-size: 13px; line-height: 1.55; margin-top: -4px; }
     .confirm { margin-top:16px; padding:16px; border-radius:18px; background:#10b981; color:white; font-weight:900; line-height:1.5; }
     details { background:white; border:1px solid #e2e8f0; border-radius:20px; padding:18px; }
     summary { font-weight:900; cursor:pointer; }
     .contact-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
     .map { min-height:280px; border-radius:28px; background:linear-gradient(135deg,#dbeafe,#f8fafc); border:1px solid #e2e8f0; display:grid; place-items:center; color:#0369a1; font-weight:950; }
     .footer { padding:28px 0; background:#020617; color:#cbd5e1; }
+    .footer a:hover { color: white !important; }
     .floating { position:fixed; right:20px; bottom:20px; z-index:60; }
     @media (max-width: 960px) {
       .nav button:not(.book) { display:none; }
@@ -248,9 +262,9 @@ export default function Odontologija1() {
           </div>
           <div className="grid cards4">
             <div className="card"><div className="icon">✓</div><h3>Aiškus planas</h3><p className="muted">Po konsultacijos aptariame eigą, alternatyvas ir preliminarią kainą.</p></div>
-            <div className="card"><div className="icon">⏱</div><h3>Patogi registracija</h3><p className="muted">Pasirinkite paslaugą, gydytoją, dieną ir laiką mėnesio kalendoriuje.</p></div>
+            <div className="card"><div className="icon">◴</div><h3>Patogi registracija</h3><p className="muted">Pasirinkite paslaugą, gydytoją, dieną ir laiką mėnesio kalendoriuje.</p></div>
             <div className="card"><div className="icon">✦</div><h3>Rami aplinka</h3><p className="muted">Dėmesys komfortui, aiškūs paaiškinimai ir pagarbus bendravimas.</p></div>
-            <div className="card"><div className="icon">☏</div><h3>Priminimai</h3><p className="muted">Pasirūpinsime, kad apie artėjantį vizitą būtumėte informuoti iš anksto.</p></div>
+            <div className="card"><div className="icon">☏</div><h3>Priminimai apie vizitą</h3><p className="muted">Pasirūpinsime, kad apie artėjantį vizitą būtumėte informuoti iš anksto.</p></div>
           </div>
         </div>
       </section>
@@ -360,9 +374,53 @@ export default function Odontologija1() {
                     ))}
                   </div>
                   <form onSubmit={submit} className="form">
-                    <input className="input" placeholder="Vardas ir pavardė" value={name} onChange={(e) => setName(e.target.value)} />
-                    <input className="input" placeholder="Telefono numeris" value={phone} onChange={(e) => setPhone(e.target.value)} />
-                    <button className="btn" type="submit">Patvirtinti registraciją</button>
+                    <input className="input" placeholder="Vardas ir pavardė *" value={name} onChange={(e) => setName(e.target.value)} />
+                    <input className="input" placeholder="Telefono numeris *" value={phone} onChange={(e) => setPhone(e.target.value)} />
+
+                    <textarea
+                      className="textarea"
+                      placeholder="Trumpai aprašykite savo situaciją arba klausimą. Pvz. domina preliminari kaina, turite rentgeno nuotrauką arba norėtumėte pasikonsultuoti dėl gydymo galimybių."
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                    />
+
+                    <div className="upload">
+                      <strong>Pridėkite rentgeno nuotrauką, jei turite</strong>
+                      <p className="small">
+                        Rentgeno nuotrauka gali padėti tiksliau įvertinti situaciją ir pateikti preliminarias rekomendacijas.
+                      </p>
+                      <div className="upload-row">
+                        <label className="upload-label">
+                          Įkelti failą
+                          <input
+                            type="file"
+                            accept=".pdf,.jpg,.jpeg,.png"
+                            onChange={(e) => setXrayFile(e.target.files?.[0]?.name || "")}
+                          />
+                        </label>
+                        <span className="small">{xrayFile || "Failas nepasirinktas"}</span>
+                      </div>
+                      <p className="small">Priimami formatai: PDF, JPG, PNG. Maksimalus failo dydis – 10 MB.</p>
+                    </div>
+
+                    <label className="consent">
+                      <input
+                        type="checkbox"
+                        checked={privacyAccepted}
+                        onChange={(e) => setPrivacyAccepted(e.target.checked)}
+                      />
+                      <span>
+                        Susipažinau su <a href="/privatumas">privatumo politika</a> ir sutinku, kad mano pateikti duomenys būtų naudojami užklausos administravimui. *
+                      </span>
+                    </label>
+
+                    <p className="data-note">
+                      Jūsų pateikti duomenys naudojami tik užklausos nagrinėjimui ir nėra perduodami tretiesiems asmenims be teisėto pagrindo.
+                    </p>
+
+                    <button className="btn" type="submit" disabled={!privacyAccepted}>
+                      Patvirtinti registraciją
+                    </button>
                   </form>
                 </>
               )}
