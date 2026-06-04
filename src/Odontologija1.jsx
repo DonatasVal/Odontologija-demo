@@ -216,7 +216,7 @@ export default function Odontologija1() {
               <div className="stat"><strong>24/7</strong><span>registracija internetu</span></div>
               <div className="stat"><strong>4.9</strong><span>pacientų įvertinimas</span></div>
               <div className="stat"><strong>12+</strong><span>metų patirties</span></div>
-              <div className="stat"><strong>SMS</strong><span>priminimai prieš vizitą</span></div>
+              <div className="stat"><strong>Individualūs</strong><span>gydymo planai</span></div>
             </div>
           </div>
           <div className="visual">
@@ -250,7 +250,7 @@ export default function Odontologija1() {
             <div className="card"><div className="icon">✓</div><h3>Aiškus planas</h3><p className="muted">Po konsultacijos aptariame eigą, alternatyvas ir preliminarią kainą.</p></div>
             <div className="card"><div className="icon">⏱</div><h3>Patogi registracija</h3><p className="muted">Pasirinkite paslaugą, gydytoją, dieną ir laiką mėnesio kalendoriuje.</p></div>
             <div className="card"><div className="icon">✦</div><h3>Rami aplinka</h3><p className="muted">Dėmesys komfortui, aiškūs paaiškinimai ir pagarbus bendravimas.</p></div>
-            <div className="card"><div className="icon">☏</div><h3>Priminimai</h3><p className="muted">Sistema paruošta SMS ir el. pašto priminimų integracijai.</p></div>
+            <div className="card"><div className="icon">☏</div><h3>Priminimai</h3><p className="muted">Pasirūpinsime, kad apie artėjantį vizitą būtumėte informuoti iš anksto.</p></div>
           </div>
         </div>
       </section>
@@ -461,7 +461,7 @@ export default function Odontologija1() {
             </details>
             <details>
               <summary>Ar gausiu priminimą prieš vizitą?</summary>
-              <p className="muted">Svetainė paruošta SMS ir el. pašto priminimų integracijai.</p>
+              <p className="muted">Pasirūpinsime, kad apie artėjantį vizitą būtumėte informuoti iš anksto.</p>
             </details>
           </div>
         </div>
