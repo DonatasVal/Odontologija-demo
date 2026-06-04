@@ -152,15 +152,47 @@ export default function Odontologija1() {
     .stat { background:#fff; border:1px solid #e2e8f0; border-radius:22px; padding:18px; box-shadow:0 14px 40px rgba(15,23,42,.05); }
     .stat strong { display:block; font-size:24px; color:#0369a1; }
     .muted { color:#64748b; line-height:1.7; }
-    .visual { background:#fff; border:1px solid #e2e8f0; border-radius:36px; padding:20px; box-shadow:0 34px 90px rgba(15,23,42,.12); }
-    .visual-inner { min-height:390px; border-radius:28px; background:linear-gradient(135deg,#dbeafe,#fff 55%,#ccfbf1); padding:28px; display:flex; flex-direction:column; justify-content:space-between; }
-    .clinic-photo-card { position: relative; overflow: hidden; border-radius: 32px; height: 100%; min-height: 520px; }
-    .clinic-photo { width:100%; height:100%; object-fit:cover; display:block; }
-    .clinic-overlay { position:absolute; left:0; right:0; bottom:0; padding:32px; background:linear-gradient(to top, rgba(15,23,42,.85), rgba(15,23,42,0)); color:white; }
-    .clinic-title { font-size:32px; font-weight:900; letter-spacing:-.03em; }
-    .clinic-subtitle { margin-top:8px; opacity:.9; }
-    .doctor-pill { display:inline-flex; align-items:center; gap:12px; background:rgba(255,255,255,.9); border:1px solid #e2e8f0; border-radius:18px; padding:14px; }
-    .avatar { width:48px; height:48px; border-radius:50%; background:#0369a1; color:white; display:grid; place-items:center; font-weight:900; }
+    .visual { background:#fff; border:1px solid #e2e8f0; border-radius:36px; padding:18px; box-shadow:0 34px 90px rgba(15,23,42,.14); }
+    .clinic-photo-card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 30px;
+      min-height: 520px;
+      background: #e2e8f0;
+    }
+    .clinic-photo {
+      width: 100%;
+      height: 520px;
+      object-fit: cover;
+      display: block;
+      transform: scale(1.01);
+    }
+    .clinic-photo-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to top, rgba(2,6,23,.76), rgba(2,6,23,.18) 52%, rgba(2,6,23,0)),
+        linear-gradient(to right, rgba(2,6,23,.20), rgba(2,6,23,0) 45%);
+      pointer-events: none;
+    }
+    .clinic-overlay {
+      position:absolute;
+      left:24px;
+      right:24px;
+      bottom:24px;
+      z-index: 2;
+      padding:24px;
+      border-radius:24px;
+      background:rgba(15,23,42,.34);
+      backdrop-filter: blur(12px);
+      color:white;
+      border: 1px solid rgba(255,255,255,.22);
+    }
+    .clinic-title { font-size:32px; font-weight:950; letter-spacing:-.04em; line-height:1.08; }
+    .clinic-subtitle { margin-top:8px; opacity:.92; font-weight:700; }
+    .clinic-benefits { display:flex; gap:8px; flex-wrap:wrap; margin-top:16px; }
+    .clinic-benefits span { background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.24); border-radius:999px; padding:8px 10px; font-size:13px; font-weight:800; }
     .section { padding:72px 0; }
     .section-head { display:flex; justify-content:space-between; align-items:end; gap:24px; margin-bottom:28px; }
     .grid { display:grid; gap:18px; }
@@ -241,13 +273,18 @@ export default function Odontologija1() {
           <div className="visual">
             <div className="clinic-photo-card">
               <img
-                src="https://images.unsplash.com/photo-1588776814546-ec7e6d0b8b6f?auto=format&fit=crop&w=1200&q=80"
-                alt="Jūsų klinikos nuotrauka"
+                src="/klinika-hero.png"
+                alt="Odontologijos klinikos aplinka"
                 className="clinic-photo"
               />
               <div className="clinic-overlay">
                 <div className="clinic-title">JŪSŲ KLINIKOS PAVADINIMAS</div>
                 <div className="clinic-subtitle">Odontologijos klinika</div>
+                <div className="clinic-benefits">
+                  <span>Individualūs gydymo planai</span>
+                  <span>Patyrę specialistai</span>
+                  <span>Registracija internetu 24/7</span>
+                </div>
               </div>
             </div>
           </div>
@@ -464,10 +501,10 @@ export default function Odontologija1() {
       <header className="header">
         <div className="container header-inner">
           <div className="logo">
-            <div className="logo-mark">D</div>
+            <div className="logo-mark">+</div>
             <div>
-              DentaCare Klinika
-              <small>Odontologija be streso</small>
+              JŪSŲ LOGOTIPO VIETA
+              <small>Odontologijos klinikos svetainės demonstracija</small>
             </div>
           </div>
           <nav className="nav">
@@ -538,7 +575,7 @@ export default function Odontologija1() {
             flexWrap: "wrap",
           }}
         >
-          <span>© 2026 DentaCare Klinika</span>
+          <span>© 2026 Jūsų klinikos pavadinimas</span>
           <span style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
             <a href="/privatumas" style={{ color: "inherit", textDecoration: "none" }}>
               Privatumo politika
