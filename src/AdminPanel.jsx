@@ -30,8 +30,8 @@ export default function AdminPanel() {
       email: "tomas@email.lt",
       service: "Pirminė konsultacija ir gydymo planas",
       doctor: "Dr. Jonas Petrauskas",
-      date: "2026-06-05",
-      time: "12:30",
+      date: "2026-06-04",
+      time: "10:30",
       duration: 30,
       comment: "Domina preliminari plombavimo kaina ir gydymo planas.",
       file: "",
@@ -44,26 +44,12 @@ export default function AdminPanel() {
       email: "rasa@email.lt",
       service: "Dantų šalinimas",
       doctor: "Dr. Marius Čepas",
-      date: "2026-06-08",
+      date: "2026-06-04",
       time: "13:00",
       duration: 60,
       comment: "Turiu rentgeno nuotrauką, skauda protinį dantį.",
       file: "rasa-panoramine.png",
       status: "Laukia patvirtinimo",
-    },
-    {
-      id: 4,
-      patient: "Eglė Rimkutė",
-      phone: "+370 633 44556",
-      email: "egle@email.lt",
-      service: "Terapinis gydymas / plombavimas",
-      doctor: "Dr. Jonas Petrauskas",
-      date: "2026-06-04",
-      time: "10:00",
-      duration: 60,
-      comment: "Nulūžo seno plombavimo kraštas.",
-      file: "",
-      status: "Nauja",
     },
   ]);
 
@@ -144,6 +130,8 @@ export default function AdminPanel() {
     ).length,
   };
 
+  const doctorsForAgenda = selectedDoctor === "Visi gydytojai" ? doctors : [selectedDoctor];
+
   function updateStatus(id, status) {
     setAppointments((current) =>
       current.map((appointment) =>
@@ -205,13 +193,7 @@ export default function AdminPanel() {
 
     setBlockedTimes((current) => [
       ...current,
-      {
-        id: Date.now(),
-        doctor,
-        date,
-        time,
-        reason,
-      },
+      { id: Date.now(), doctor, date, time, reason },
     ]);
   }
 
@@ -264,21 +246,25 @@ export default function AdminPanel() {
     return "badge neutral";
   }
 
-  const doctorsForAgenda = selectedDoctor === "Visi gydytojai" ? doctors : [selectedDoctor];
-
   const css = `
     * { box-sizing: border-box; }
-    body { margin: 0; }
+    body { margin: 0; background: #f7f9f8; }
     .admin-page {
       min-height: 100vh;
-      background: #f8fafc;
-      color: #0f172a;
+      color: #142033;
+      background:
+        radial-gradient(circle at 10% 0%, rgba(223,238,232,.8), transparent 34%),
+        linear-gradient(180deg, #ffffff 0%, #f7f9f8 100%);
       font-family: Inter, Arial, sans-serif;
     }
     .admin-header {
-      background: #082f49;
-      color: white;
-      padding: 34px 20px;
+      background: rgba(255,255,255,.88);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid #e4ebe7;
+      padding: 28px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 30;
     }
     .wrap {
       width: min(1320px, calc(100% - 40px));
@@ -293,13 +279,14 @@ export default function AdminPanel() {
     }
     h1 {
       margin: 0 0 8px;
-      font-size: clamp(30px, 4vw, 46px);
-      letter-spacing: -0.045em;
+      font-size: clamp(30px, 4vw, 44px);
+      letter-spacing: -0.055em;
       line-height: 1;
+      color: #142033;
     }
     .admin-header p {
       margin: 0;
-      color: #cbd5e1;
+      color: #667085;
       line-height: 1.6;
     }
     .home-link {
@@ -307,11 +294,12 @@ export default function AdminPanel() {
       align-items: center;
       justify-content: center;
       border-radius: 999px;
-      background: white;
-      color: #0369a1;
+      background: #142033;
+      color: white;
       text-decoration: none;
       padding: 12px 18px;
       font-weight: 900;
+      box-shadow: 0 14px 34px rgba(20,32,51,.18);
     }
     .content {
       padding: 30px 0 70px;
@@ -326,26 +314,32 @@ export default function AdminPanel() {
     .input,
     .select {
       width: 100%;
-      border: 1px solid #cbd5e1;
+      border: 1px solid #e4ebe7;
       border-radius: 16px;
       padding: 13px 14px;
       font-size: 15px;
-      background: white;
-      color: #0f172a;
+      background: #fff;
+      color: #142033;
+      outline: none;
+    }
+    .input:focus,
+    .select:focus {
+      border-color: #9fb7aa;
+      box-shadow: 0 0 0 4px rgba(159,183,170,.16);
     }
     .button {
       border: 0;
       border-radius: 999px;
       padding: 13px 17px;
-      background: #0369a1;
+      background: #142033;
       color: white;
       font-weight: 900;
       cursor: pointer;
       white-space: nowrap;
     }
     .button.light {
-      background: #e0f2fe;
-      color: #0369a1;
+      background: #dfeee8;
+      color: #142033;
     }
     .stats {
       display: grid;
@@ -355,20 +349,21 @@ export default function AdminPanel() {
     }
     .stat-card {
       background: white;
-      border: 1px solid #e2e8f0;
+      border: 1px solid #e4ebe7;
       border-radius: 22px;
       padding: 18px;
-      box-shadow: 0 14px 40px rgba(15,23,42,.05);
+      box-shadow: 0 12px 32px rgba(20,32,51,.06);
     }
     .stat-card strong {
       display: block;
-      color: #0369a1;
+      color: #142033;
       font-size: 30px;
       line-height: 1;
       margin-bottom: 8px;
+      letter-spacing: -.04em;
     }
     .stat-card span {
-      color: #64748b;
+      color: #667085;
       font-weight: 800;
     }
     .layout {
@@ -379,29 +374,30 @@ export default function AdminPanel() {
     }
     .panel {
       background: white;
-      border: 1px solid #e2e8f0;
-      border-radius: 26px;
-      box-shadow: 0 18px 50px rgba(15,23,42,.06);
+      border: 1px solid #e4ebe7;
+      border-radius: 28px;
+      box-shadow: 0 18px 50px rgba(20,32,51,.07);
       overflow: hidden;
     }
     .panel-title {
       padding: 18px 20px;
-      border-bottom: 1px solid #e2e8f0;
+      border-bottom: 1px solid #e4ebe7;
       display: flex;
       justify-content: space-between;
       align-items: center;
       gap: 14px;
       flex-wrap: wrap;
+      background: #fbfcfb;
     }
     .panel-title h2 {
       margin: 0;
       font-size: 22px;
-      letter-spacing: -.03em;
-      color: #082f49;
+      letter-spacing: -.04em;
+      color: #142033;
     }
     .panel-title p {
       margin: 4px 0 0;
-      color: #64748b;
+      color: #667085;
       font-size: 14px;
     }
     .agenda {
@@ -413,44 +409,41 @@ export default function AdminPanel() {
       grid-template-columns: 88px repeat(var(--doctor-count), minmax(220px, 1fr));
     }
     .agenda-head {
-      background: #f1f5f9;
-      color: #334155;
+      background: #f3f6f4;
+      color: #536071;
       font-size: 13px;
       text-transform: uppercase;
       letter-spacing: .04em;
       font-weight: 900;
       padding: 13px;
-      border-bottom: 1px solid #e2e8f0;
-      border-right: 1px solid #e2e8f0;
+      border-bottom: 1px solid #e4ebe7;
+      border-right: 1px solid #e4ebe7;
     }
     .time-cell {
-      background: #f8fafc;
-      color: #64748b;
+      background: #fbfcfb;
+      color: #74808d;
       font-weight: 900;
       padding: 14px 12px;
-      border-bottom: 1px solid #e2e8f0;
-      border-right: 1px solid #e2e8f0;
+      border-bottom: 1px solid #e4ebe7;
+      border-right: 1px solid #e4ebe7;
       min-height: 86px;
     }
     .slot {
       min-height: 86px;
       padding: 10px;
-      border-bottom: 1px solid #e2e8f0;
-      border-right: 1px solid #e2e8f0;
+      border-bottom: 1px solid #e4ebe7;
+      border-right: 1px solid #e4ebe7;
       background: white;
     }
-    .slot.free {
-      background: #ffffff;
-    }
     .slot.blocked {
-      background: #fff7ed;
+      background: #faf5ec;
     }
     .appointment-card {
       border-radius: 16px;
       padding: 12px;
-      background: #e0f2fe;
-      border: 1px solid #bae6fd;
-      color: #0f172a;
+      background: #e9f4f1;
+      border: 1px solid #c9ded5;
+      color: #142033;
     }
     .appointment-card strong {
       display: block;
@@ -459,9 +452,9 @@ export default function AdminPanel() {
     .blocked-card {
       border-radius: 16px;
       padding: 12px;
-      background: #fed7aa;
-      border: 1px solid #fdba74;
-      color: #7c2d12;
+      background: #efe7d8;
+      border: 1px solid #d7c5a6;
+      color: #5d4928;
       font-weight: 900;
     }
     .free-actions {
@@ -469,7 +462,7 @@ export default function AdminPanel() {
       justify-content: space-between;
       gap: 8px;
       align-items: center;
-      color: #94a3b8;
+      color: #9aa5ae;
       font-size: 13px;
       height: 100%;
     }
@@ -477,19 +470,19 @@ export default function AdminPanel() {
       border: 0;
       border-radius: 999px;
       padding: 8px 10px;
-      background: #f1f5f9;
-      color: #334155;
+      background: #f3f6f4;
+      color: #142033;
       font-weight: 900;
       cursor: pointer;
       font-size: 12px;
       white-space: nowrap;
     }
     .small-btn.red {
-      background: #fee2e2;
-      color: #991b1b;
+      background: #ffe4e6;
+      color: #9f1239;
     }
     .small-btn.blue {
-      background: #0369a1;
+      background: #142033;
       color: white;
     }
     .list {
@@ -498,7 +491,7 @@ export default function AdminPanel() {
       padding: 16px;
     }
     .visit {
-      border: 1px solid #e2e8f0;
+      border: 1px solid #e4ebe7;
       border-radius: 20px;
       padding: 15px;
       background: white;
@@ -512,10 +505,10 @@ export default function AdminPanel() {
     }
     .visit-name {
       font-weight: 950;
-      color: #0f172a;
+      color: #142033;
     }
     .muted {
-      color: #64748b;
+      color: #667085;
       font-size: 13px;
       line-height: 1.5;
     }
@@ -530,8 +523,8 @@ export default function AdminPanel() {
     .badge.blue { background: #dbeafe; color: #1d4ed8; }
     .badge.amber { background: #fef3c7; color: #92400e; }
     .badge.green { background: #dcfce7; color: #166534; }
-    .badge.red { background: #fee2e2; color: #991b1b; }
-    .badge.neutral { background: #f1f5f9; color: #334155; }
+    .badge.red { background: #ffe4e6; color: #9f1239; }
+    .badge.neutral { background: #f3f6f4; color: #536071; }
     .visit-controls {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -546,8 +539,8 @@ export default function AdminPanel() {
     }
     .file {
       display: inline-flex;
-      color: #0369a1;
-      background: #e0f2fe;
+      color: #142033;
+      background: #dfeee8;
       padding: 6px 9px;
       border-radius: 999px;
       font-weight: 900;
@@ -557,13 +550,13 @@ export default function AdminPanel() {
     .empty {
       padding: 30px;
       text-align: center;
-      color: #64748b;
+      color: #667085;
     }
     .note {
       margin-top: 18px;
-      background: #eff6ff;
-      border: 1px solid #bfdbfe;
-      color: #1e3a8a;
+      background: #f3f6f4;
+      border: 1px solid #dfeee8;
+      color: #365a73;
       border-radius: 20px;
       padding: 16px;
       line-height: 1.6;
@@ -587,7 +580,7 @@ export default function AdminPanel() {
           <div>
             <h1>Registracijų administravimas</h1>
             <p>
-              Darbotvarkė pagal datą ir gydytoją, vizitų statusai, perkėlimas ir gydytojo nedarbo laikai.
+              Premium stiliaus administravimo darbotvarkė: filtrai pagal datą, gydytoją, būseną, vizitų perkėlimas ir blokuoti laikai.
             </p>
           </div>
           <a className="home-link" href="/">
@@ -723,7 +716,7 @@ export default function AdminPanel() {
                       }
 
                       return (
-                        <div className="slot free" key={`${doctor}-${time}`}>
+                        <div className="slot" key={`${doctor}-${time}`}>
                           <div className="free-actions">
                             <span>Laisva</span>
                             <button
@@ -876,7 +869,7 @@ export default function AdminPanel() {
         </div>
 
         <div className="note">
-          <strong>Pastaba:</strong> šis failas dar veikia demo režimu su lokaliais duomenimis.
+          <strong>Pastaba:</strong> šis failas veikia demo režimu su lokaliais duomenimis.
           Kitas etapas – prijungti šią logiką prie Supabase lentelių: appointments, blocked_times,
           doctors ir doctor_working_hours.
         </div>
