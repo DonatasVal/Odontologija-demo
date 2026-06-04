@@ -1,37 +1,41 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export default function Odontologija1() {
   const services = [
     {
       id: "higiena",
+      icon: "✦",
       title: "Profesionali burnos higiena",
       price: "70 €",
       duration: "45–60 min.",
-      description: "Apnašų ir pigmentacijos pašalinimas, Air-Flow srovė ir dantų poliravimas.",
+      description: "Apnašų ir pigmentacijos pašalinimas, Air-Flow srovė, dantų poliravimas ir individualios priežiūros rekomendacijos.",
       doctors: ["Dr. Lina Vaitkūnienė", "Dr. Monika Vaičiulytė"],
     },
     {
       id: "konsultacija",
-      title: "Pirminė konsultacija ir gydymo planas",
+      icon: "◎",
+      title: "Konsultacija ir gydymo planas",
       price: "30 €",
       duration: "30 min.",
-      description: "Apžiūra, situacijos paaiškinimas ir aiškus tolimesnio gydymo planas.",
+      description: "Apžiūra, situacijos paaiškinimas, galimų sprendimų palyginimas ir aiškus tolimesnio gydymo planas.",
       doctors: ["Dr. Jonas Petrauskas", "Dr. Monika Vaičiulytė"],
     },
     {
       id: "plombavimas",
+      icon: "◇",
       title: "Terapinis gydymas / plombavimas",
       price: "nuo 60 €",
       duration: "45–90 min.",
-      description: "Karieso gydymas, estetiškas plombos atkūrimas ir poliravimas.",
+      description: "Karieso gydymas, estetiškas plombos atkūrimas, danties formos atstatymas ir kruopštus poliravimas.",
       doctors: ["Dr. Jonas Petrauskas"],
     },
     {
       id: "chirurgija",
-      title: "Dantų šalinimas",
+      icon: "△",
+      title: "Burnos chirurgija",
       price: "nuo 80 €",
       duration: "30–60 min.",
-      description: "Atraumatinis dantų šalinimas ir aiškios rekomendacijos po procedūros.",
+      description: "Atraumatinis dantų šalinimas, chirurginės konsultacijos ir aiškios rekomendacijos po procedūros.",
       doctors: ["Dr. Marius Čepas"],
     },
   ];
@@ -42,24 +46,28 @@ export default function Odontologija1() {
       role: "Terapinis gydymas",
       exp: "10 metų patirtis",
       note: "Aiškiai paaiškina gydymo eigą ir parenka pacientui tinkamiausią sprendimą.",
+      tags: ["Terapija", "Estetika", "Gydymo planai"],
     },
     {
       name: "Dr. Lina Vaitkūnienė",
       role: "Burnos higiena",
       exp: "7 metų patirtis",
       note: "Švelni, kruopšti profesionali burnos higiena net jautresniems pacientams.",
+      tags: ["Higiena", "Air-Flow", "Profilaktika"],
     },
     {
       name: "Dr. Marius Čepas",
       role: "Burnos chirurgija",
       exp: "12 metų patirtis",
       note: "Dantų šalinimas, chirurginės konsultacijos ir pooperacinė priežiūra.",
+      tags: ["Chirurgija", "Šalinimas", "Implantologija"],
     },
     {
       name: "Dr. Monika Vaičiulytė",
       role: "Konsultacijos",
       exp: "8 metų patirtis",
       note: "Išsamūs gydymo planai, profilaktikos rekomendacijos ir paciento poreikių įvertinimas.",
+      tags: ["Konsultacijos", "Planai", "Profilaktika"],
     },
   ];
 
@@ -75,13 +83,30 @@ export default function Odontologija1() {
     "2026-06-25": ["09:00", "13:00", "15:30"],
   };
 
+  const reviews = [
+    {
+      name: "Milda K.",
+      text: "Labai aiškiai paaiškino gydymo eigą ir kainą. Jaučiausi ramiai viso vizito metu.",
+    },
+    {
+      name: "Tomas R.",
+      text: "Patogi registracija internetu ir malonus, dėmesingas personalas. Viskas atrodė profesionaliai.",
+    },
+    {
+      name: "Rasa M.",
+      text: "Švari aplinka, profesionali higiena ir aiškios rekomendacijos po procedūros.",
+    },
+  ];
+
   const [view, setView] = useState("home");
+  const [scrolled, setScrolled] = useState(false);
   const [selectedService, setSelectedService] = useState(services[0]);
   const [selectedDoctor, setSelectedDoctor] = useState(services[0].doctors[0]);
   const [selectedDate, setSelectedDate] = useState("2026-06-04");
   const [selectedTime, setSelectedTime] = useState("09:00");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [xrayFile, setXrayFile] = useState("");
   const [privacyAccepted, setPrivacyAccepted] = useState(false);
@@ -95,8 +120,41 @@ export default function Odontologija1() {
     return { day, iso, active: Boolean(slots[iso]) };
   });
 
+  useEffect(() => {
+    function onScroll() {
+      setScrolled(window.scrollY > 28);
+    }
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    const elements = Array.from(document.querySelectorAll(".reveal"));
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.14, rootMargin: "0px 0px -40px 0px" }
+    );
+
+    elements.forEach((element, index) => {
+      element.style.setProperty("--delay", `${Math.min(index * 55, 330)}ms`);
+      observer.observe(element);
+    });
+
+    return () => observer.disconnect();
+  }, [view]);
+
   function nav(nextView) {
     setView(nextView);
+    setConfirmed(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -123,169 +181,349 @@ export default function Odontologija1() {
     setConfirmed(true);
   }
 
+  function initials(value) {
+    const parts = value.split(" ").filter(Boolean);
+    return parts.slice(1, 3).map((item) => item[0]).join("").toUpperCase() || "Dr";
+  }
+
   const css = `
     * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
     body { margin: 0; }
-    .site { min-height: 100vh; font-family: Inter, Arial, sans-serif; color: #0f172a; background: #f8fafc; }
+    .site {
+      min-height: 100vh;
+      font-family: Inter, Arial, sans-serif;
+      color: #142033;
+      background:
+        radial-gradient(circle at 12% 0%, rgba(224,238,232,.82), transparent 30%),
+        radial-gradient(circle at 96% 6%, rgba(238,231,216,.72), transparent 32%),
+        linear-gradient(180deg, #ffffff 0%, #f7f9f8 48%, #ffffff 100%);
+      overflow-x: hidden;
+    }
     .container { width: min(1180px, calc(100% - 40px)); margin: 0 auto; }
-    .header { position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,.92); backdrop-filter: blur(16px); border-bottom: 1px solid #e2e8f0; }
-    .header-inner { height: 76px; display: flex; justify-content: space-between; align-items: center; gap: 20px; }
-    .logo { display: flex; align-items: center; gap: 12px; font-weight: 900; letter-spacing: -.03em; }
-    .logo-mark { width: 44px; height: 44px; border-radius: 15px; background: linear-gradient(135deg,#0369a1,#14b8a6); color: white; display: grid; place-items: center; }
-    .logo small { display:block; color:#64748b; font-weight:700; letter-spacing:0; margin-top:2px; }
-    .nav { display: flex; align-items: center; gap: 10px; }
-    .nav button { border: 0; background: transparent; padding: 10px 12px; border-radius: 999px; cursor: pointer; color:#334155; font-weight: 800; }
-    .nav button.active, .nav button:hover { background: #e0f2fe; color: #0369a1; }
-    .btn { border: 0; border-radius: 999px; padding: 13px 22px; font-weight: 900; cursor: pointer; background: #0369a1; color: white; box-shadow: 0 16px 35px rgba(3,105,161,.18); text-decoration: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
-    .btn.secondary { background: white; color: #0369a1; border: 1px solid #bae6fd; box-shadow: none; }
-    .btn.soft { background: #f1f5f9; color: #0f172a; box-shadow: none; border: 1px solid #e2e8f0; }
-    .btn:disabled { opacity: .55; cursor: not-allowed; }
-    .hero { padding: 94px 0 72px; background: radial-gradient(circle at 78% 10%, #bae6fd 0, transparent 32%), linear-gradient(180deg,#eff6ff 0,#fff 90%); overflow: hidden; }
-    .hero-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 44px; align-items: center; }
-    .eyebrow { display: inline-flex; align-items:center; gap:8px; background:#e0f2fe; color:#075985; padding: 8px 14px; border-radius:999px; font-weight:900; font-size:13px; }
-    h1 { margin: 22px 0 18px; font-size: clamp(40px, 5vw, 72px); line-height: .96; letter-spacing: -.06em; color:#082f49; }
-    h2 { margin: 0; font-size: clamp(30px, 3.6vw, 48px); line-height: 1.05; letter-spacing: -.045em; color:#082f49; }
-    h3 { margin: 0 0 10px; color:#0f172a; font-size: 20px; }
-    .lead { font-size: 19px; line-height: 1.7; color:#475569; max-width: 680px; }
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255,255,255,.96);
+      border-bottom: 1px solid rgba(225,232,228,.82);
+      transition: background .28s ease, box-shadow .28s ease, border-color .28s ease;
+    }
+    .header.scrolled {
+      background: rgba(255,255,255,.72);
+      backdrop-filter: blur(22px);
+      border-color: rgba(225,232,228,.56);
+      box-shadow: 0 14px 42px rgba(20,32,51,.08);
+    }
+    .header-inner {
+      height: 78px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      transition: height .28s ease;
+    }
+    .header.scrolled .header-inner { height: 64px; }
+    .logo { display: flex; align-items: center; gap: 12px; font-weight: 950; letter-spacing: -.03em; cursor: pointer; }
+    .logo-mark {
+      width: 44px;
+      height: 44px;
+      border-radius: 16px;
+      background: linear-gradient(145deg, #142033, #2a3e58);
+      color: white;
+      display: grid;
+      place-items: center;
+      box-shadow: 0 16px 36px rgba(20,32,51,.18);
+      transition: width .28s ease, height .28s ease, border-radius .28s ease;
+    }
+    .header.scrolled .logo-mark { width: 38px; height: 38px; border-radius: 14px; }
+    .logo small { display:block; color:#667085; font-weight:800; letter-spacing:0; margin-top:3px; font-size: 12px; }
+    .nav { display: flex; align-items: center; gap: 8px; }
+    .nav button {
+      border: 0;
+      background: transparent;
+      padding: 10px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      color:#3f4c5e;
+      font-weight: 850;
+      transition: color .18s ease, background .18s ease, transform .18s ease;
+    }
+    .nav button.active, .nav button:hover { background: rgba(20,32,51,.055); color: #142033; }
+    .nav button:hover { transform: translateY(-1px); }
+    .btn {
+      border: 0;
+      border-radius: 999px;
+      padding: 13px 22px;
+      font-weight: 950;
+      cursor: pointer;
+      background: #142033;
+      color: white;
+      box-shadow: 0 16px 34px rgba(20,32,51,.18);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 20px 46px rgba(20,32,51,.22); }
+    .btn.secondary { background: white; color: #142033; border: 1px solid #dfe7e2; box-shadow: none; }
+    .btn.soft { background: #f3f6f4; color: #142033; box-shadow: none; border: 1px solid #e1e8e4; }
+    .btn.book { padding: 12px 20px; }
+    .btn:disabled { opacity: .55; cursor: not-allowed; transform: none; box-shadow: none; }
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease var(--delay), transform .7s ease var(--delay); }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .page-enter { animation: pageIn .42s ease both; }
+    @keyframes pageIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes floatSoft { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+    @keyframes photoIn { from { opacity: 0; transform: translateX(18px) scale(.985); } to { opacity: 1; transform: translateX(0) scale(1); } }
+    .hero { padding: 88px 0 74px; overflow: hidden; }
+    .hero-grid { display: grid; grid-template-columns: 1.03fr .97fr; gap: 54px; align-items: center; }
+    .eyebrow {
+      display: inline-flex;
+      align-items:center;
+      gap:8px;
+      background:#e8f4ef;
+      color:#426653;
+      border: 1px solid #c9ddd4;
+      padding: 8px 14px;
+      border-radius:999px;
+      font-weight:950;
+      font-size:12px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .eyebrow::before { content:""; width: 7px; height: 7px; background: #6f9b84; border-radius: 99px; }
+    h1 {
+      margin: 24px 0 20px;
+      font-size: clamp(38px, 5vw, 66px);
+      line-height: 1.02;
+      letter-spacing: -.065em;
+      color:#142033;
+      max-width: 720px;
+    }
+    h1 span { color: #365a73; }
+    h2 { margin: 0; font-size: clamp(30px, 3.5vw, 46px); line-height: 1.07; letter-spacing: -.055em; color:#142033; }
+    h3 { margin: 0 0 10px; color:#142033; font-size: 20px; letter-spacing: -.025em; }
+    .lead { font-size: 18px; line-height: 1.75; color:#5f6d7d; max-width: 660px; }
     .actions { display:flex; gap:12px; flex-wrap:wrap; margin-top:28px; }
-    .stats { display:grid; grid-template-columns: repeat(4,1fr); gap:14px; margin-top:32px; }
-    .stat { background:#fff; border:1px solid #e2e8f0; border-radius:22px; padding:18px; box-shadow:0 14px 40px rgba(15,23,42,.05); }
-    .stat strong { display:block; font-size:24px; color:#0369a1; }
-    .muted { color:#64748b; line-height:1.7; }
-    .visual { background:#fff; border:1px solid #e2e8f0; border-radius:36px; padding:18px; box-shadow:0 34px 90px rgba(15,23,42,.14); }
+    .trust-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 16px;
+      margin-top: 30px;
+      color: #334155;
+      font-weight: 850;
+    }
+    .trust-row span {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      background: rgba(255,255,255,.78);
+      border: 1px solid #e1e8e4;
+      border-radius: 999px;
+      box-shadow: 0 10px 28px rgba(20,32,51,.04);
+    }
+    .trust-row i { width: 7px; height: 7px; background: #7fa993; border-radius: 99px; display: inline-block; }
+    .hero-media { position: relative; }
     .clinic-photo-card {
       position: relative;
       overflow: hidden;
-      border-radius: 30px;
-      min-height: 520px;
-      background: #e2e8f0;
+      border-radius: 38px;
+      min-height: 540px;
+      background: #e8efeb;
+      border: 1px solid rgba(255,255,255,.78);
+      box-shadow: 0 38px 110px rgba(20,32,51,.14);
+      animation: photoIn .7s ease both;
     }
-    .clinic-photo {
-      width: 100%;
-      height: 520px;
-      object-fit: cover;
-      display: block;
-      transform: scale(1.01);
-    }
+    .clinic-photo { width:100%; height:540px; object-fit:cover; display:block; filter: saturate(.94) contrast(1.03); transition: transform .7s ease; }
+    .clinic-photo-card:hover .clinic-photo { transform: scale(1.035); }
     .clinic-photo-card::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(to top, rgba(2,6,23,.76), rgba(2,6,23,.18) 52%, rgba(2,6,23,0)),
-        linear-gradient(to right, rgba(2,6,23,.20), rgba(2,6,23,0) 45%);
-      pointer-events: none;
-    }
-    .clinic-overlay {
+      content:"";
       position:absolute;
-      left:24px;
-      right:24px;
-      bottom:24px;
-      z-index: 2;
-      padding:24px;
-      border-radius:24px;
-      background:rgba(15,23,42,.34);
-      backdrop-filter: blur(12px);
-      color:white;
-      border: 1px solid rgba(255,255,255,.22);
+      inset:0;
+      background: linear-gradient(180deg, rgba(20,32,51,.02) 0%, rgba(20,32,51,.08) 45%, rgba(20,32,51,.28) 100%);
+      pointer-events:none;
     }
-    .clinic-title { font-size:32px; font-weight:950; letter-spacing:-.04em; line-height:1.08; }
-    .clinic-subtitle { margin-top:8px; opacity:.92; font-weight:700; }
-    .clinic-benefits { display:flex; gap:8px; flex-wrap:wrap; margin-top:16px; }
-    .clinic-benefits span { background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.24); border-radius:999px; padding:8px 10px; font-size:13px; font-weight:800; }
+    .clinic-fallback {
+      display:none;
+      align-items:center;
+      justify-content:center;
+      min-height:540px;
+      padding:40px;
+      text-align:center;
+      background: linear-gradient(135deg,#e8f4ef,#fff 58%,#eee7d8);
+      color:#142033;
+      font-weight:950;
+    }
+    .clinic-card-mini {
+      position: absolute;
+      left: 24px;
+      right: 24px;
+      bottom: 24px;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 18px;
+      border-radius: 26px;
+      padding: 18px 20px;
+      background: rgba(255,255,255,.86);
+      border: 1px solid rgba(255,255,255,.88);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 24px 64px rgba(20,32,51,.16);
+    }
+    .clinic-title { font-size: 20px; font-weight: 950; letter-spacing: -.035em; color:#142033; }
+    .clinic-subtitle { margin-top: 4px; color:#64748b; font-size: 13px; font-weight: 750; }
+    .rating-badge { display:flex; flex-direction:column; align-items:flex-end; gap:3px; font-weight:950; color:#142033; white-space: nowrap; }
+    .rating-badge small { color:#64748b; font-weight:800; }
+    .hero-note {
+      position: absolute;
+      top: 26px;
+      left: -22px;
+      width: 216px;
+      border-radius: 24px;
+      background: rgba(255,255,255,.92);
+      border: 1px solid #e1e8e4;
+      box-shadow: 0 18px 54px rgba(20,32,51,.11);
+      padding: 17px;
+      animation: floatSoft 4.8s ease-in-out infinite;
+    }
+    .hero-note small { display:block; color:#64748b; font-size: 11px; font-weight: 950; text-transform: uppercase; letter-spacing: .07em; }
+    .hero-note strong { display:block; margin-top:6px; line-height:1.35; }
     .section { padding:72px 0; }
-    .section-head { display:flex; justify-content:space-between; align-items:end; gap:24px; margin-bottom:28px; }
+    .section.soft { background: rgba(243,246,244,.72); }
+    .section-head { display:flex; justify-content:space-between; align-items:end; gap:24px; margin-bottom:30px; }
+    .section-head .lead { max-width: 520px; font-size: 16px; }
     .grid { display:grid; gap:18px; }
     .cards4 { grid-template-columns: repeat(4,1fr); }
     .cards3 { grid-template-columns: repeat(3,1fr); }
-    .card { background:#fff; border:1px solid #e2e8f0; border-radius:26px; padding:24px; box-shadow:0 16px 45px rgba(15,23,42,.05); }
-    .icon { width:52px; height:52px; border-radius:18px; background:#e0f2fe; color:#0369a1; display:grid; place-items:center; font-size:24px; margin-bottom:14px; }
-    .price { color:#0369a1; font-size:30px; font-weight:950; margin-top:18px; }
-    .small { font-size: 13px; color:#64748b; }
-    .doctor-photo { width:78px; height:78px; border-radius:24px; background:linear-gradient(135deg,#0369a1,#14b8a6); color:white; display:grid; place-items:center; font-size:28px; font-weight:950; margin-bottom:16px; }
-    .booking { background:#082f49; color:#fff; min-height: calc(100vh - 76px); }
-    .booking h2, .booking h3 { color:#fff; }
-    .booking .muted { color:#cbd5e1; }
+    .card {
+      background:rgba(255,255,255,.92);
+      border:1px solid #e1e8e4;
+      border-radius:28px;
+      padding:24px;
+      box-shadow:0 16px 45px rgba(20,32,51,.05);
+      transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+    }
+    .card:hover { transform: translateY(-6px); box-shadow:0 24px 70px rgba(20,32,51,.09); border-color:#c9ddd4; }
+    .icon { width:52px; height:52px; border-radius:18px; background:#e8f4ef; color:#426653; display:grid; place-items:center; font-size:24px; margin-bottom:14px; font-weight:950; border:1px solid #c9ddd4; }
+    .price { color:#142033; font-size:28px; font-weight:950; margin-top:18px; letter-spacing: -.04em; }
+    .small { font-size: 13px; color:#667085; }
+    .muted { color:#667085; line-height:1.7; }
+    .doctor-photo { width:78px; height:78px; border-radius:24px; background:linear-gradient(145deg,#142033,#2a3e58); color:white; display:grid; place-items:center; font-size:26px; font-weight:950; margin-bottom:16px; box-shadow:0 18px 44px rgba(20,32,51,.14); }
+    .doctor-tags { display:flex; flex-wrap:wrap; gap:7px; margin: 14px 0 18px; }
+    .doctor-tags span { border-radius:999px; background:#f3f6f4; padding:6px 10px; color:#475569; font-size:12px; font-weight:850; }
+    .booking { background: transparent; min-height: calc(100vh - 76px); }
     .booking-grid { display:grid; grid-template-columns:.85fr 1.15fr; gap:24px; align-items:start; }
-    .booking .card { background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.16); color:white; }
-    .option { width:100%; text-align:left; border:1px solid rgba(255,255,255,.16); background:rgba(255,255,255,.06); color:#fff; border-radius:17px; padding:14px; margin:8px 0; cursor:pointer; }
-    .option.active { background:#0ea5e9; border-color:#7dd3fc; }
-    .calendar { background:#fff; color:#0f172a; border-radius:28px; padding:20px; }
+    .booking-panel { background:#fff; border:1px solid #e1e8e4; border-radius:30px; box-shadow:0 20px 70px rgba(20,32,51,.08); padding:24px; }
+    .option { width:100%; text-align:left; border:1px solid #e1e8e4; background:#fff; color:#142033; border-radius:17px; padding:14px; margin:8px 0; cursor:pointer; transition:.18s ease; }
+    .option:hover { background:#f8fbf9; border-color:#c9ddd4; transform: translateY(-1px); }
+    .option.active { background:#e8f4ef; border-color:#8fb69d; box-shadow: 0 8px 22px rgba(111,155,132,.12); }
+    .calendar { background:#fff; color:#142033; border-radius:28px; padding:20px; border:1px solid #e1e8e4; }
     .calendar-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; gap:12px; }
-    .weekdays, .days { display:grid; grid-template-columns:repeat(7,1fr); gap:8px; }
-    .weekdays div { text-align:center; color:#64748b; font-size:12px; font-weight:900; }
-    .day { height:45px; border:1px solid #e2e8f0; border-radius:15px; background:#f8fafc; cursor:default; }
-    .day.available { background:#e0f2fe; color:#0369a1; font-weight:950; cursor:pointer; }
-    .day.selected { background:#0369a1; color:white; border-color:#0369a1; }
-    .times { display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
-    .time { border:1px solid #bae6fd; background:white; color:#0369a1; border-radius:999px; padding:10px 15px; cursor:pointer; font-weight:900; }
-    .time.selected { background:#0369a1; color:white; }
+    .weekdays, .days { display:grid; grid-template-columns:repeat(7,1fr); gap:6px; text-align:center; }
+    .weekdays { color:#64748b; font-weight:900; font-size:12px; margin-bottom:7px; }
+    .day { aspect-ratio:1; border:0; border-radius:13px; background:#f3f6f4; color:#94a3b8; font-weight:900; cursor:not-allowed; transition:.16s ease; }
+    .day.available { background:#e8f4ef; color:#142033; cursor:pointer; }
+    .day.available:hover { transform: scale(1.05); background:#d9eee5; }
+    .day.selected { background:#142033; color:white; }
+    .times { display:flex; gap:8px; flex-wrap:wrap; margin:18px 0; }
+    .time { border:1px solid #e1e8e4; background:#fff; color:#142033; border-radius:999px; padding:10px 15px; font-weight:900; cursor:pointer; }
+    .time.selected { background:#142033; color:white; border-color:#142033; }
     .form { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:18px; }
-    .input, .textarea { width:100%; padding:14px 16px; border-radius:16px; border:1px solid #cbd5e1; font-size:15px; font-family: inherit; }
-    .textarea { grid-column: 1 / -1; min-height: 122px; resize: vertical; line-height: 1.55; }
-    .upload { grid-column: 1 / -1; border: 1px dashed #93c5fd; background: #f8fafc; border-radius: 18px; padding: 16px; }
-    .upload-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
-    .upload input { display: none; }
-    .upload-label { display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; background: #0369a1; color: white; padding: 11px 16px; font-weight: 900; cursor: pointer; }
-    .consent { grid-column: 1 / -1; display: flex; gap: 12px; align-items: flex-start; padding: 14px; border-radius: 18px; background: #f8fafc; border: 1px solid #e2e8f0; color: #334155; line-height: 1.55; }
-    .consent input { width: 20px; height: 20px; margin-top: 3px; accent-color: #0369a1; flex: 0 0 auto; }
-    .consent a { color: #0369a1; font-weight: 900; text-decoration: none; }
-    .data-note { grid-column: 1 / -1; color: #64748b; font-size: 13px; line-height: 1.55; margin-top: -4px; }
-    .confirm { margin-top:16px; padding:16px; border-radius:18px; background:#10b981; color:white; font-weight:900; line-height:1.5; }
-    details { background:white; border:1px solid #e2e8f0; border-radius:20px; padding:18px; }
-    summary { font-weight:900; cursor:pointer; }
-    .contact-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
-    .map { min-height:280px; border-radius:28px; background:linear-gradient(135deg,#dbeafe,#f8fafc); border:1px solid #e2e8f0; display:grid; place-items:center; color:#0369a1; font-weight:950; }
-    .footer { padding:28px 0; background:#020617; color:#cbd5e1; }
-    .footer a:hover { color: white !important; }
-    .floating { position:fixed; right:20px; bottom:20px; z-index:60; }
-    @media (max-width: 960px) {
-      .nav button:not(.book) { display:none; }
+    .input, .textarea { width:100%; border:1px solid #e1e8e4; border-radius:17px; padding:13px 14px; background:#fff; color:#142033; outline:none; }
+    .input:focus, .textarea:focus { border-color:#8fb69d; box-shadow:0 0 0 4px rgba(111,155,132,.12); }
+    .textarea { grid-column:1/-1; min-height:110px; resize:vertical; line-height:1.55; }
+    .upload { grid-column:1/-1; border:1px dashed #c9d9d1; border-radius:20px; padding:16px; background:#f8fbf9; }
+    .upload input { display:none; }
+    .upload-row { display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin:10px 0; }
+    .upload-label { display:inline-flex; background:#142033; color:#fff; border-radius:999px; padding:10px 14px; font-weight:900; cursor:pointer; }
+    .consent { grid-column:1/-1; display:flex; gap:12px; align-items:flex-start; background:#f8fbf9; border:1px solid #e1e8e4; border-radius:20px; padding:14px; color:#475569; line-height:1.55; font-size:14px; }
+    .consent input { width:18px; height:18px; accent-color:#6f9b84; margin-top:2px; flex:0 0 auto; }
+    .consent a { color:#0d5f8c; font-weight:900; text-decoration:none; }
+    .data-note { grid-column:1/-1; color:#667085; font-size:12px; line-height:1.6; }
+    .confirm { margin-top:18px; padding:18px; border-radius:20px; background:#e9f8ef; color:#166534; font-weight:900; border:1px solid #bfe3cd; }
+    .contact-grid { display:grid; grid-template-columns:.9fr 1.1fr; gap:24px; align-items:stretch; }
+    .map { min-height:360px; border-radius:30px; background:linear-gradient(135deg,#e8f4ef,#fff 58%,#eee7d8); border:1px solid #e1e8e4; display:grid; place-items:center; color:#334155; font-weight:950; box-shadow:0 16px 45px rgba(20,32,51,.05); }
+    details { background:#fff; border:1px solid #e1e8e4; border-radius:22px; padding:18px; box-shadow:0 12px 36px rgba(20,32,51,.04); }
+    summary { cursor:pointer; font-weight:950; color:#142033; }
+    .footer { background:#142033; color:rgba(255,255,255,.64); padding:34px 0; }
+    .floating { position:fixed; right:22px; bottom:22px; z-index:40; }
+    @media (max-width: 1060px) {
       .hero-grid, .booking-grid, .contact-grid { grid-template-columns:1fr; }
-      .cards4, .cards3, .stats { grid-template-columns:1fr; }
-      .form { grid-template-columns:1fr; }
-      .hero { padding:64px 0; }
+      .cards4 { grid-template-columns:repeat(2,1fr); }
+      .clinic-photo-card, .clinic-photo, .clinic-fallback { min-height:460px; height:460px; }
+      .hero-note { display:none; }
+    }
+    @media (max-width: 720px) {
+      .container { width: calc(100% - 30px); }
+      .nav button:not(.book) { display:none; }
+      .cards4, .cards3, .form { grid-template-columns:1fr; }
+      .section-head { display:block; }
+      .hero { padding:58px 0; }
+      .clinic-card-mini { grid-template-columns:1fr; }
+      .rating-badge { align-items:flex-start; }
+      h1 { font-size: clamp(40px, 12vw, 56px); }
+      .floating { right:16px; bottom:16px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation:none !important; transition:none !important; scroll-behavior:auto !important; }
+      .reveal { opacity:1; transform:none; }
     }
   `;
 
   const Home = (
-    <>
+    <div className="page-enter">
       <section className="hero">
         <div className="container hero-grid">
-          <div>
-            <span className="eyebrow">● Registracija internetu 24/7</span>
-            <h1>Odontologija be streso ir skubėjimo</h1>
+          <div className="reveal visible">
+            <div className="eyebrow">Registracija internetu 24/7</div>
+            <h1>Šiuolaikinė odontologija <span>ramiai ir aiškiai</span></h1>
             <p className="lead">
-              Skiriame laiko išklausyti, paaiškinti ir pasiūlyti geriausią sprendimą.
-              Konsultacijos, burnos higiena, terapinis gydymas ir chirurgija vienoje vietoje.
+              Skiriame laiko išklausyti, paaiškinti ir pasiūlyti geriausią sprendimą. Aiškus gydymo planas, rami aplinka ir patogi registracija internetu.
             </p>
             <div className="actions">
               <button className="btn" onClick={() => nav("booking")}>Registruotis vizitui</button>
-              <button className="btn secondary" onClick={() => nav("services")}>Peržiūrėti kainas</button>
+              <button className="btn secondary" onClick={() => nav("services")}>Peržiūrėti paslaugas</button>
             </div>
-            <div className="stats">
-              <div className="stat"><strong>24/7</strong><span>registracija internetu</span></div>
-              <div className="stat"><strong>4.9</strong><span>pacientų įvertinimas</span></div>
-              <div className="stat"><strong>12+</strong><span>metų patirties</span></div>
-              <div className="stat"><strong>Individualūs</strong><span>gydymo planai</span></div>
+            <div className="trust-row" aria-label="Klinikos privalumai">
+              <span><i /> Aiškūs gydymo planai</span>
+              <span><i /> Patyrę specialistai</span>
+              <span><i /> Rami klinikos aplinka</span>
+              <span><i /> Registracija internetu 24/7</span>
             </div>
           </div>
-          <div className="visual">
+
+          <div className="hero-media reveal visible">
             <div className="clinic-photo-card">
               <img
                 src="/klinika-hero.png"
                 alt="Odontologijos klinikos aplinka"
                 className="clinic-photo"
+                onError={(event) => {
+                  event.currentTarget.style.display = "none";
+                  const fallback = event.currentTarget.nextElementSibling;
+                  if (fallback) fallback.style.display = "flex";
+                }}
               />
-              <div className="clinic-overlay">
-                <div className="clinic-title">JŪSŲ KLINIKOS PAVADINIMAS</div>
-                <div className="clinic-subtitle">Odontologijos klinika</div>
-                <div className="clinic-benefits">
-                  <span>Individualūs gydymo planai</span>
-                  <span>Patyrę specialistai</span>
-                  <span>Registracija internetu 24/7</span>
+              <div className="clinic-fallback">Įkelkite klinikos nuotrauką į public/klinika-hero.png</div>
+              <div className="clinic-card-mini">
+                <div>
+                  <div className="clinic-title">JŪSŲ KLINIKOS PAVADINIMAS</div>
+                  <div className="clinic-subtitle">Odontologijos klinika · profesionali priežiūra Jūsų šypsenai</div>
+                </div>
+                <div className="rating-badge">
+                  <span>★★★★★ 4.9</span>
+                  <small>pacientų įvertinimas</small>
                 </div>
               </div>
+            </div>
+            <div className="hero-note">
+              <small>Pacientų patirtis</small>
+              <strong>Aiški informacija, patogi registracija ir pagarbus bendravimas.</strong>
             </div>
           </div>
         </div>
@@ -293,36 +531,44 @@ export default function Odontologija1() {
 
       <section className="section">
         <div className="container">
-          <div className="section-head">
+          <div className="section-head reveal">
             <div>
               <h2>Ką pacientai vertina labiausiai</h2>
-              <p className="muted">Profesionalumas, aiškumas ir patogi registracija be papildomų skambučių.</p>
+              <p className="muted">Profesionali svetainė turi ne tik atrodyti gražiai, bet ir sumažinti paciento abejones.</p>
             </div>
           </div>
           <div className="grid cards4">
-            <div className="card"><div className="icon">✓</div><h3>Aiškus planas</h3><p className="muted">Po konsultacijos aptariame eigą, alternatyvas ir preliminarią kainą.</p></div>
-            <div className="card"><div className="icon">◴</div><h3>Patogi registracija</h3><p className="muted">Pasirinkite paslaugą, gydytoją, dieną ir laiką mėnesio kalendoriuje.</p></div>
-            <div className="card"><div className="icon">✦</div><h3>Rami aplinka</h3><p className="muted">Dėmesys komfortui, aiškūs paaiškinimai ir pagarbus bendravimas.</p></div>
-            <div className="card"><div className="icon">☏</div><h3>Priminimai apie vizitą</h3><p className="muted">Pasirūpinsime, kad apie artėjantį vizitą būtumėte informuoti iš anksto.</p></div>
+            {[
+              ["◎", "Aiškus planas", "Po konsultacijos aptariame eigą, alternatyvas ir preliminarią kainą."],
+              ["◴", "Patogi registracija", "Pacientas gali registruotis bet kuriuo metu, net po darbo valandų."],
+              ["✦", "Rami aplinka", "Švarus, estetiškas dizainas kuria medicininį pasitikėjimą."],
+              ["☏", "Priminimai", "Pasirūpinsime, kad apie artėjantį vizitą būtumėte informuoti iš anksto."],
+            ].map(([icon, title, text]) => (
+              <article className="card reveal" key={title}>
+                <div className="icon">{icon}</div>
+                <h3>{title}</h3>
+                <p className="muted">{text}</p>
+              </article>
+            ))}
           </div>
         </div>
       </section>
-    </>
+    </div>
   );
 
   const Services = (
-    <section className="section">
+    <section className="section page-enter">
       <div className="container">
-        <div className="section-head">
+        <div className="section-head reveal visible">
           <div>
             <h2>Paslaugos ir kainos</h2>
-            <p className="muted">Orientacinės kainos pateikiamos iš anksto. Tiksli kaina priklauso nuo individualios situacijos.</p>
+            <p className="muted">Orientacinės kainos padeda pacientui geriau suprasti galimus sprendimus. Tiksli kaina priklauso nuo individualios situacijos.</p>
           </div>
         </div>
         <div className="grid cards4">
           {services.map((service) => (
-            <article className="card" key={service.id}>
-              <div className="icon">🦷</div>
+            <article className="card reveal" key={service.id}>
+              <div className="icon">{service.icon}</div>
               <h3>{service.title}</h3>
               <p className="muted">{service.description}</p>
               <div className="price">{service.price}</div>
@@ -336,22 +582,25 @@ export default function Odontologija1() {
   );
 
   const Doctors = (
-    <section className="section">
+    <section className="section page-enter">
       <div className="container">
-        <div className="section-head">
+        <div className="section-head reveal visible">
           <div>
             <h2>Gydytojų komanda</h2>
-            <p className="muted">Pasirinkite specialistą pagal paslaugą arba registruokitės konsultacijai.</p>
+            <p className="muted">Specialistų pristatymas kuria pasitikėjimą dar prieš pirmą vizitą.</p>
           </div>
         </div>
         <div className="grid cards4">
           {doctors.map((doctor) => (
-            <article className="card" key={doctor.name}>
-              <div className="doctor-photo">{doctor.name.split(" ")[1]?.[0] || "D"}</div>
+            <article className="card reveal" key={doctor.name}>
+              <div className="doctor-photo">{initials(doctor.name)}</div>
               <h3>{doctor.name}</h3>
-              <strong style={{ color: "#0369a1" }}>{doctor.role}</strong>
+              <strong style={{ color: "#426653" }}>{doctor.role}</strong>
               <p className="small">{doctor.exp}</p>
               <p className="muted">{doctor.note}</p>
+              <div className="doctor-tags">
+                {doctor.tags.map((tag) => <span key={tag}>{tag}</span>)}
+              </div>
               <button className="btn soft" onClick={() => nav("booking")}>Registruotis</button>
             </article>
           ))}
@@ -361,16 +610,16 @@ export default function Odontologija1() {
   );
 
   const Booking = (
-    <section className="section booking">
+    <section className="section booking page-enter">
       <div className="container">
-        <div className="section-head">
+        <div className="section-head reveal visible">
           <div>
             <h2>Registracija internetu</h2>
             <p className="muted">Užpildykite registraciją per mažiau nei minutę. Administratorius patvirtins vizitą darbo metu.</p>
           </div>
         </div>
         <div className="booking-grid">
-          <div className="card">
+          <div className="booking-panel reveal visible">
             <h3>1. Paslauga</h3>
             {services.map((service) => (
               <button key={service.id} className={`option ${selectedService.id === service.id ? "active" : ""}`} onClick={() => chooseService(service)}>
@@ -385,12 +634,12 @@ export default function Odontologija1() {
             ))}
           </div>
 
-          <div className="card">
+          <div className="booking-panel reveal visible">
             <h3>3. Pasirinkite dieną ir laiką</h3>
             <div className="calendar">
               <div className="calendar-top">
                 <strong>2026 m. birželis</strong>
-                <span className="small">Mėlynos dienos turi laisvų laikų</span>
+                <span className="small">Žalsvos dienos turi laisvų laikų</span>
               </div>
               <div className="weekdays">
                 {["Pr", "An", "Tr", "Kt", "Pn", "Št", "Sk"].map((d) => <div key={d}>{d}</div>)}
@@ -415,6 +664,8 @@ export default function Odontologija1() {
                   <form onSubmit={submit} className="form">
                     <input className="input" placeholder="Vardas ir pavardė *" value={name} onChange={(e) => setName(e.target.value)} />
                     <input className="input" placeholder="Telefono numeris *" value={phone} onChange={(e) => setPhone(e.target.value)} />
+                    <input className="input" placeholder="El. paštas (neprivaloma)" value={email} onChange={(e) => setEmail(e.target.value)} />
+                    <input className="input" placeholder="Miestas / pastaba (neprivaloma)" />
 
                     <textarea
                       className="textarea"
@@ -425,17 +676,11 @@ export default function Odontologija1() {
 
                     <div className="upload">
                       <strong>Pridėkite rentgeno nuotrauką, jei turite</strong>
-                      <p className="small">
-                        Rentgeno nuotrauka gali padėti tiksliau įvertinti situaciją ir pateikti preliminarias rekomendacijas.
-                      </p>
+                      <p className="small">Rentgeno nuotrauka gali padėti tiksliau įvertinti situaciją ir pateikti preliminarias rekomendacijas.</p>
                       <div className="upload-row">
                         <label className="upload-label">
                           Įkelti failą
-                          <input
-                            type="file"
-                            accept=".pdf,.jpg,.jpeg,.png"
-                            onChange={(e) => setXrayFile(e.target.files?.[0]?.name || "")}
-                          />
+                          <input type="file" accept=".pdf,.jpg,.jpeg,.png" onChange={(e) => setXrayFile(e.target.files?.[0]?.name || "")} />
                         </label>
                         <span className="small">{xrayFile || "Failas nepasirinktas"}</span>
                       </div>
@@ -443,32 +688,20 @@ export default function Odontologija1() {
                     </div>
 
                     <label className="consent">
-                      <input
-                        type="checkbox"
-                        checked={privacyAccepted}
-                        onChange={(e) => setPrivacyAccepted(e.target.checked)}
-                      />
+                      <input type="checkbox" checked={privacyAccepted} onChange={(e) => setPrivacyAccepted(e.target.checked)} />
                       <span>
                         Susipažinau su <a href="/privatumas">privatumo politika</a> ir sutinku, kad mano pateikti duomenys būtų naudojami užklausos administravimui. *
                       </span>
                     </label>
 
-                    <p className="data-note">
-                      Jūsų pateikti duomenys naudojami tik užklausos nagrinėjimui ir nėra perduodami tretiesiems asmenims be teisėto pagrindo.
-                    </p>
+                    <p className="data-note">Jūsų pateikti duomenys naudojami tik užklausos nagrinėjimui ir nėra perduodami tretiesiems asmenims be teisėto pagrindo.</p>
 
-                    <button className="btn" type="submit" disabled={!privacyAccepted}>
-                      Patvirtinti registraciją
-                    </button>
+                    <button className="btn" type="submit" disabled={!privacyAccepted || !name || !phone}>Patvirtinti registraciją</button>
                   </form>
                 </>
               )}
 
-              {confirmed && (
-                <div className="confirm">
-                  Registracija gauta: {selectedService.title}, {selectedDoctor}, {selectedDate} {selectedTime}. Susisieksime dėl patvirtinimo.
-                </div>
-              )}
+              {confirmed && <div className="confirm">Registracija gauta: {selectedService.title}, {selectedDoctor}, {selectedDate} {selectedTime}. Susisieksime dėl patvirtinimo.</div>}
             </div>
           </div>
         </div>
@@ -477,19 +710,19 @@ export default function Odontologija1() {
   );
 
   const Contact = (
-    <section className="section">
+    <section className="section page-enter">
       <div className="container contact-grid">
-        <div>
+        <div className="reveal visible">
           <h2>Kontaktai</h2>
           <p className="muted">Susisiekite telefonu arba registruokitės internetu jums patogiu metu.</p>
           <div className="card">
             <p><strong>Telefonas:</strong> +370 600 00000</p>
-            <p><strong>El. paštas:</strong> info@dentacare.lt</p>
+            <p><strong>El. paštas:</strong> info@jusuklinika.lt</p>
             <p><strong>Adresas:</strong> Vilnius, Lietuva</p>
             <p><strong>Darbo laikas:</strong> I–V 08:00–19:00, VI 09:00–14:00</p>
           </div>
         </div>
-        <div className="map">Google Maps vieta / klinikos lokacija</div>
+        <div className="map reveal visible">Google Maps vieta / klinikos lokacija</div>
       </div>
     </section>
   );
@@ -498,9 +731,9 @@ export default function Odontologija1() {
     <div className="site">
       <style>{css}</style>
 
-      <header className="header">
+      <header className={`header ${scrolled ? "scrolled" : ""}`}>
         <div className="container header-inner">
-          <div className="logo">
+          <div className="logo" onClick={() => nav("home")}>
             <div className="logo-mark">+</div>
             <div>
               JŪSŲ LOGOTIPO VIETA
@@ -523,24 +756,22 @@ export default function Odontologija1() {
       {view === "booking" && Booking}
       {view === "contact" && Contact}
 
-      <section className="section" style={{ paddingTop: 20 }}>
+      <section className="section soft" style={{ paddingTop: view === "home" ? 20 : 50 }}>
         <div className="container">
+          <div className="section-head reveal">
+            <div>
+              <h2>Pacientų atsiliepimai</h2>
+              <p className="muted">Socialinis pasitikėjimas yra viena svarbiausių profesionalios medicinos svetainės dalių.</p>
+            </div>
+          </div>
           <div className="grid cards3">
-            <article className="card">
-              <strong style={{ color: "#0369a1" }}>★★★★★</strong>
-              <p>Labai aiškiai paaiškino gydymo eigą ir kainą. Jaučiausi ramiai.</p>
-              <span className="small">– Milda</span>
-            </article>
-            <article className="card">
-              <strong style={{ color: "#0369a1" }}>★★★★★</strong>
-              <p>Patogi registracija internetu ir malonus personalas.</p>
-              <span className="small">– Tomas</span>
-            </article>
-            <article className="card">
-              <strong style={{ color: "#0369a1" }}>★★★★★</strong>
-              <p>Švari aplinka, profesionali higiena ir aiškios rekomendacijos.</p>
-              <span className="small">– Rasa</span>
-            </article>
+            {reviews.map((review) => (
+              <article className="card reveal" key={review.name}>
+                <strong style={{ color: "#d0a045", letterSpacing: 2 }}>★★★★★</strong>
+                <p>„{review.text}“</p>
+                <span className="small">– {review.name}</span>
+              </article>
+            ))}
           </div>
         </div>
       </section>
@@ -548,15 +779,15 @@ export default function Odontologija1() {
       <section className="section" style={{ paddingTop: 0 }}>
         <div className="container">
           <div className="grid cards3">
-            <details open>
+            <details open className="reveal">
               <summary>Ar konsultacijos metu gausiu gydymo planą?</summary>
               <p className="muted">Taip, aptarsime situaciją, galimus sprendimus ir preliminarią kainą.</p>
             </details>
-            <details>
+            <details className="reveal">
               <summary>Kiek trunka burnos higiena?</summary>
               <p className="muted">Dažniausiai 45–60 min., priklausomai nuo burnos būklės.</p>
             </details>
-            <details>
+            <details className="reveal">
               <summary>Ar gausiu priminimą prieš vizitą?</summary>
               <p className="muted">Pasirūpinsime, kad apie artėjantį vizitą būtumėte informuoti iš anksto.</p>
             </details>
@@ -565,29 +796,14 @@ export default function Odontologija1() {
       </section>
 
       <footer className="footer">
-        <div
-          className="container"
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            gap: 20,
-            flexWrap: "wrap",
-          }}
-        >
+        <div className="container" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 20, flexWrap: "wrap" }}>
           <span>© 2026 Jūsų klinikos pavadinimas</span>
           <span style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-            <a href="/privatumas" style={{ color: "inherit", textDecoration: "none" }}>
-              Privatumo politika
-            </a>
+            <a href="/privatumas" style={{ color: "inherit", textDecoration: "none" }}>Privatumo politika</a>
             <span>·</span>
-            <a href="/privatumas#slapukai" style={{ color: "inherit", textDecoration: "none" }}>
-              Slapukai
-            </a>
+            <a href="/privatumas#slapukai" style={{ color: "inherit", textDecoration: "none" }}>Slapukai</a>
             <span>·</span>
-            <a href="/privatumas#sutikimai" style={{ color: "inherit", textDecoration: "none" }}>
-              Duomenų sutikimai
-            </a>
+            <a href="/privatumas#sutikimai" style={{ color: "inherit", textDecoration: "none" }}>Duomenų sutikimai</a>
           </span>
         </div>
       </footer>
