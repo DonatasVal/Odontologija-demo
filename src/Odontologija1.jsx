@@ -154,6 +154,11 @@ export default function Odontologija1() {
     .muted { color:#64748b; line-height:1.7; }
     .visual { background:#fff; border:1px solid #e2e8f0; border-radius:36px; padding:20px; box-shadow:0 34px 90px rgba(15,23,42,.12); }
     .visual-inner { min-height:390px; border-radius:28px; background:linear-gradient(135deg,#dbeafe,#fff 55%,#ccfbf1); padding:28px; display:flex; flex-direction:column; justify-content:space-between; }
+    .clinic-photo-card { position: relative; overflow: hidden; border-radius: 32px; height: 100%; min-height: 520px; }
+    .clinic-photo { width:100%; height:100%; object-fit:cover; display:block; }
+    .clinic-overlay { position:absolute; left:0; right:0; bottom:0; padding:32px; background:linear-gradient(to top, rgba(15,23,42,.85), rgba(15,23,42,0)); color:white; }
+    .clinic-title { font-size:32px; font-weight:900; letter-spacing:-.03em; }
+    .clinic-subtitle { margin-top:8px; opacity:.9; }
     .doctor-pill { display:inline-flex; align-items:center; gap:12px; background:rgba(255,255,255,.9); border:1px solid #e2e8f0; border-radius:18px; padding:14px; }
     .avatar { width:48px; height:48px; border-radius:50%; background:#0369a1; color:white; display:grid; place-items:center; font-weight:900; }
     .section { padding:72px 0; }
@@ -234,18 +239,15 @@ export default function Odontologija1() {
             </div>
           </div>
           <div className="visual">
-            <div className="visual-inner">
-              <div>
-                <span className="eyebrow">Švari ir rami aplinka</span>
-                <h2 style={{ marginTop: 18 }}>Privati klinika visai šeimai</h2>
-                <p className="muted">Aiškus gydymo planas, skaidri kainodara ir dėmesys paciento savijautai.</p>
-              </div>
-              <div className="doctor-pill">
-                <div className="avatar">M</div>
-                <div>
-                  <strong>Dr. Monika Vaičiulytė</strong><br />
-                  <small>Konsultacijos ir gydymo planai</small>
-                </div>
+            <div className="clinic-photo-card">
+              <img
+                src="https://images.unsplash.com/photo-1588776814546-ec7e6d0b8b6f?auto=format&fit=crop&w=1200&q=80"
+                alt="Jūsų klinikos nuotrauka"
+                className="clinic-photo"
+              />
+              <div className="clinic-overlay">
+                <div className="clinic-title">JŪSŲ KLINIKOS PAVADINIMAS</div>
+                <div className="clinic-subtitle">Odontologijos klinika</div>
               </div>
             </div>
           </div>
@@ -462,10 +464,10 @@ export default function Odontologija1() {
       <header className="header">
         <div className="container header-inner">
           <div className="logo">
-            <div className="logo-mark">+</div>
+            <div className="logo-mark">D</div>
             <div>
-              JŪSŲ LOGOTIPO VIETA
-              <small>Odontologijos klinikos svetainės demonstracija</small>
+              DentaCare Klinika
+              <small>Odontologija be streso</small>
             </div>
           </div>
           <nav className="nav">
