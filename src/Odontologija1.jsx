@@ -462,10 +462,10 @@ export default function Odontologija1() {
       <header className="header">
         <div className="container header-inner">
           <div className="logo">
-            <div className="logo-mark">D</div>
+            <div className="logo-mark">+</div>
             <div>
-              DentaCare Klinika
-              <small>Odontologija be streso</small>
+              JŪSŲ LOGOTIPO VIETA
+              <small>Odontologijos klinikos svetainės demonstracija</small>
             </div>
           </div>
           <nav className="nav">
